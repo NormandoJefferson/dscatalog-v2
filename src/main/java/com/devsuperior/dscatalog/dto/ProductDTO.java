@@ -2,6 +2,7 @@ package com.devsuperior.dscatalog.dto;
 
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
+import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -13,12 +14,23 @@ public class ProductDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+
+	@Size(min = 5, max = 60, message = "Deve ter entre 5 e 60 caracteres")
+	@NotBlank(message = "Campo requerido")
 	private String name;
+
+	@NotBlank(message = "Campo requerido")
 	private String description;
+
+	@Positive(message = "Preço deve ser um valor positivo")
 	private Double price;
+
 	private String imgUrl;
+
+	@PastOrPresent(message = "A data do produto não pode ser futura")
 	private Instant date;
-	
+
+	@NotEmpty(message = "Produto sem categoria não é permitido")
 	private List<CategoryDTO> categories = new ArrayList<>();
 	
 	public ProductDTO() {

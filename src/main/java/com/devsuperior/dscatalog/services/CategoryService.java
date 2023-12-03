@@ -24,32 +24,32 @@ public class CategoryService {
 	
 	@Transactional(readOnly = true)
 	public Page<CategoryDTO> findAllPaged(Pageable pageable) {
-		Page<Category> list = repository.findAll(pageable);
-		return list.map(x -> new CategoryDTO(x));
+		Page<Category> page = repository.findAll(pageable);
+		return page.map(category -> new CategoryDTO(category));
 	}
 
 	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id) {
-		Optional<Category> obj = repository.findById(id);
-		Category entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		return new CategoryDTO(entity);
+		Optional<Category> categoryOptional = repository.findById(id);
+		Category category = categoryOptional.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		return new CategoryDTO(category);
 	}
 
 	@Transactional
-	public CategoryDTO insert(CategoryDTO dto) {
-		Category entity = new Category();
-		entity.setName(dto.getName());
-		entity = repository.save(entity);
-		return new CategoryDTO(entity);
+	public CategoryDTO insert(CategoryDTO categoryDTO) {
+		Category category = new Category();
+		category.setName(categoryDTO.getName());
+		category = repository.save(category);
+		return new CategoryDTO(category);
 	}
 
 	@Transactional
-	public CategoryDTO update(Long id, CategoryDTO dto) {
+	public CategoryDTO update(Long id, CategoryDTO categoryDTO) {
 		try {
-			Category entity = repository.getReferenceById(id);
-			entity.setName(dto.getName());
-			entity = repository.save(entity);
-			return new CategoryDTO(entity);
+			Category category = repository.getReferenceById(id);
+			category.setName(categoryDTO.getName());
+			category = repository.save(category);
+			return new CategoryDTO(category);
 		}
 		catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found " + id);

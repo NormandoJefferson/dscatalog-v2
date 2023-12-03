@@ -35,33 +35,33 @@ public class UserService {
 	
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAllPaged(Pageable pageable) {
-		Page<User> list = repository.findAll(pageable);
-		return list.map(x -> new UserDTO(x));
+		Page<User> page = repository.findAll(pageable);
+		return page.map(user -> new UserDTO(user));
 	}
 
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
-		Optional<User> obj = repository.findById(id);
-		User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		return new UserDTO(entity);
+		Optional<User> userOptional = repository.findById(id);
+		User user = userOptional.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		return new UserDTO(user);
 	}
 
 	@Transactional
 	public UserDTO insert(UserInsertDTO userInsertDTO) {
-		User entity = new User();
-		copyDtoToEntity(userInsertDTO, entity);
-		entity.setPassword(passwordEncoder.encode(userInsertDTO.getPassword()));
-		entity = repository.save(entity);
-		return new UserDTO(entity);
+		User user = new User();
+		copyDtoToEntity(userInsertDTO, user);
+		user.setPassword(passwordEncoder.encode(userInsertDTO.getPassword()));
+		user = repository.save(user);
+		return new UserDTO(user);
 	}
 
 	@Transactional
-	public UserDTO update(Long id, UserDTO dto) {
+	public UserDTO update(Long id, UserDTO userDTO) {
 		try {
-			User entity = repository.getReferenceById(id);
-			copyDtoToEntity(dto, entity);
-			entity = repository.save(entity);
-			return new UserDTO(entity);
+			User user = repository.getReferenceById(id);
+			copyDtoToEntity(userDTO, user);
+			user = repository.save(user);
+			return new UserDTO(user);
 		}
 		catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found " + id);

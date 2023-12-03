@@ -30,32 +30,32 @@ public class ProductService {
 	
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Pageable pageable) {
-		Page<Product> list = repository.findAll(pageable);
-		return list.map(x -> new ProductDTO(x));
+		Page<Product> page = repository.findAll(pageable);
+		return page.map(product -> new ProductDTO(product));
 	}
 
 	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
-		Optional<Product> obj = repository.findById(id);
-		Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		return new ProductDTO(entity, entity.getCategories());
+		Optional<Product> productOptional = repository.findById(id);
+		Product product = productOptional.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		return new ProductDTO(product, product.getCategories());
 	}
 
 	@Transactional
-	public ProductDTO insert(ProductDTO dto) {
-		Product entity = new Product();
-		copyDtoToEntity(dto, entity);
-		entity = repository.save(entity);
-		return new ProductDTO(entity);
+	public ProductDTO insert(ProductDTO productDTO) {
+		Product product = new Product();
+		copyDtoToEntity(productDTO, product);
+		product = repository.save(product);
+		return new ProductDTO(product);
 	}
 
 	@Transactional
-	public ProductDTO update(Long id, ProductDTO dto) {
+	public ProductDTO update(Long id, ProductDTO productDTO) {
 		try {
-			Product entity = repository.getReferenceById(id);
-			copyDtoToEntity(dto, entity);
-			entity = repository.save(entity);
-			return new ProductDTO(entity);
+			Product product = repository.getReferenceById(id);
+			copyDtoToEntity(productDTO, product);
+			product = repository.save(product);
+			return new ProductDTO(product);
 		}
 		catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
@@ -76,13 +76,11 @@ public class ProductService {
 	}
 	
 	private void copyDtoToEntity(ProductDTO dto, Product entity) {
-
 		entity.setName(dto.getName());
 		entity.setDescription(dto.getDescription());
 		entity.setDate(dto.getDate());
 		entity.setImgUrl(dto.getImgUrl());
 		entity.setPrice(dto.getPrice());
-		
 		entity.getCategories().clear();
 		for (CategoryDTO catDto : dto.getCategories()) {
 			Category category = categoryRepository.getReferenceById(catDto.getId());

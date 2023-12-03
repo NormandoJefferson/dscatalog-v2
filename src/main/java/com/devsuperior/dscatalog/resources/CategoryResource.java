@@ -20,28 +20,28 @@ public class CategoryResource {
 	
 	@GetMapping
 	public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {
-		Page<CategoryDTO> list = service.findAllPaged(pageable);		
-		return ResponseEntity.ok().body(list);
+		Page<CategoryDTO> pageDTO = service.findAllPaged(pageable);
+		return ResponseEntity.ok().body(pageDTO);
 	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
-		CategoryDTO dto = service.findById(id);
-		return ResponseEntity.ok().body(dto);
+		CategoryDTO categoryDTO = service.findById(id);
+		return ResponseEntity.ok().body(categoryDTO);
 	}
 	
 	@PostMapping
-	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
-		dto = service.insert(dto);
+	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO categoryDTO) {
+		categoryDTO = service.insert(categoryDTO);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(dto.getId()).toUri();
-		return ResponseEntity.created(uri).body(dto);
+				.buildAndExpand(categoryDTO.getId()).toUri();
+		return ResponseEntity.created(uri).body(categoryDTO);
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
-		dto = service.update(id, dto);
-		return ResponseEntity.ok().body(dto);
+	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+		categoryDTO = service.update(id, categoryDTO);
+		return ResponseEntity.ok().body(categoryDTO);
 	}
 
 	@DeleteMapping(value = "/{id}")
