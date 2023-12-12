@@ -18,10 +18,9 @@ public class AppConfig {
 	}
 
 	@Bean
-	@Profile("test") // Só para o perfil de teste
-	@Order(1) // Vai rodar na ordem 1 (executa primeiro)
+	@Profile("test")
+	@Order(1)
 	public SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
-
 		http.securityMatcher(PathRequest.toH2Console()).csrf(csrf -> csrf.disable())
 				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 		return http.build();
