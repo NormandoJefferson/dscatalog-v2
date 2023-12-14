@@ -30,7 +30,7 @@ public class ProductResource {
 		ProductDTO productDTO = service.findById(id);
 		return ResponseEntity.ok().body(productDTO);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO productDTO) {
 		productDTO = service.insert(productDTO);
